@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel · Capacitaciones HyS</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+<style>
+  html, body { margin:0; height:100%; background:#F6F9FA; font-family:'Plus Jakarta Sans', Arial, sans-serif; color:#0D313F; }
+  iframe { border:0; width:100%; height:100%; display:block; }
+  #acceso { display:none; max-width:420px; margin:12vh auto 0; background:#fff; border-radius:10px; padding:28px; box-shadow:0 4px 24px rgba(13,49,63,.08); }
+  #acceso .k { font-size:11px; letter-spacing:.08em; color:#5894A7; font-weight:700; }
+  #acceso h1 { font-size:20px; margin:4px 0 14px; }
+  #acceso p { font-size:13px; color:#5B6B73; line-height:1.5; }
+  #acceso input { width:100%; box-sizing:border-box; padding:10px; font-size:15px; border:1px solid #C9D9DF; border-radius:6px; margin:6px 0 12px; font-family:inherit; }
+  #acceso button { background:#0D313F; color:#fff; border:0; padding:10px 18px; border-radius:6px; font-weight:700; font-size:14px; cursor:pointer; }
+  #salir { position:fixed; right:10px; bottom:10px; z-index:9; background:rgba(13,49,63,.75); color:#fff; border:0; border-radius:14px; padding:5px 11px; font-size:11px; cursor:pointer; display:none; }
+</style>
+</head>
+<body>
+<div id="acceso">
+  <div class="k">SERVICIO DE HIGIENE Y SEGURIDAD LABORAL · HZT / HMH</div>
+  <h1>Panel · Capacitaciones HyS</h1>
+  <p>Pegá la clave del panel (lo que va después de <b>?panel=</b> en el link privado) o el link privado completo. Se guarda en este navegador y no se vuelve a pedir.</p>
+  <input id="clave" autocomplete="off" placeholder="Clave o link privado">
+  <button id="entrar">Entrar</button>
+</div>
+<iframe id="panel" title="Panel de control" allow="clipboard-write" style="display:none"></iframe>
+<button id="salir" title="Borra la clave guardada en este navegador">Cerrar sesión</button>
+<script>
+  // Dirección de la aplicación (Implementar › Gestionar implementaciones). No cambia al publicar versiones nuevas.
+  const EXEC = 'https://script.google.com/macros/s/AKfycbwKduTFNC4b6s5OLYcPNCjI1GbgQD2ymFN5yqBK7D1fh1pPRMzS_kpB4khnKqEhu4qYEA/exec';
+  const KEY = 'clavePanelHyS';
+  const $ = id => document.getElementById(id);
+  const leer = () => { try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; } };
+  const guardar = v => { try { localStorage.setItem(KEY, v); } catch (e) {} };
+
+  function mostrarPanel(clave) {
+    $('acceso').style.display = 'none';
+    $('panel').src = EXEC + '?panel=' + encodeURIComponent(clave);
+    $('panel').style.display = 'block';
+    $('salir').style.display = 'block';
+  }
+  function pedirClave() {
+    $('panel').style.display = 'none'; $('salir').style.display = 'none';
+    $('acceso').style.display = 'block'; $('clave').focus();
+  }
+  $('entrar').onclick = () => {
+    let v = $('clave').value.trim();
+    const m = v.match(/[?&]panel=([^&#\s]+)/); if (m) v = decodeURIComponent(m[1]);
+    if (!v) return;
+    guardar(v); mostrarPanel(v);
+  };
+  $('clave').addEventListener('keydown', e => { if (e.key === 'Enter') $('entrar').click(); });
+  $('salir').onclick = () => { if (confirm('¿Borrar la clave guardada en este navegador?')) { try { localStorage.removeItem(KEY); } catch (e) {} $('clave').value = ''; pedirClave(); } };
+
+  const c = leer(); c ? mostrarPanel(c) : pedirClave();
+</script>
+</body>
+</html>
