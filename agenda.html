@@ -21,6 +21,7 @@
   var limpio = function (v) { return /^[A-Za-z0-9]{6,40}$/.test(v || '') ? v : ''; };
   if (limpio(q.get('j'))) src += '&j=' + q.get('j');           // página de una jefatura
   else if (limpio(q.get('x'))) src += '&x=' + q.get('x');      // cancelar una inscripción
+  else if (limpio(q.get('cf'))) src += '&cf=' + q.get('cf') + (q.get('r') === 'no' ? '&r=no' : '');   // confirmar o rechazar un pedido
   else if (q.get('yo')) src += '&yo=1';                        // inscripción personal con DNI
   var f = document.createElement('iframe');
   f.src = src; f.title = 'Agenda de capacitaciones'; f.setAttribute('allow', 'clipboard-write');
