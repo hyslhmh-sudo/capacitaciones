@@ -18,12 +18,15 @@
 </head>
 <body>
 <script>
-  // Dirección de la Web App del sistema de capacitaciones (Apps Script).
-  var APP = 'https://script.google.com/macros/s/AKfycbwKduTFNC4b6s5OLYcPNCjI1GbgQD2ymFN5yqBK7D1fh1pPRMzS_kpB4khnKqEhu4qYEA/exec';
-  var k = new URLSearchParams(location.search).get('k');
-  if (k && /^[A-Za-z0-9]{6,40}$/.test(k)) {
+  // Dirección de la Web App del sistema de capacitaciones (libro único «CAPACITACIONES · Sistema HyS», desde el 15/10/2026).
+  // Los links y QR que ya circulan siguen sirviendo: el código (k) de cada capacitación es el mismo en los dos sistemas.
+  // Sistema anterior (solo como respaldo): https://script.google.com/macros/s/AKfycbwKduTFNC4b6s5OLYcPNCjI1GbgQD2ymFN5yqBK7D1fh1pPRMzS_kpB4khnKqEhu4qYEA/exec
+  var APP = 'https://script.google.com/macros/s/AKfycbxXz2AuN9nx5JkiNVI0LFYpEG-0ciYTXH9pN6QnO3SIaIltljCi8sbRB4PwiDx9Jf4Ugw/exec';
+  var q = new URLSearchParams(location.search), par = '';
+  ['k', 'd', 'i', 'c'].forEach(function (n) { var v = q.get(n); if (!par && v && /^[A-Za-z0-9_-]{4,40}$/.test(v)) par = n + '=' + encodeURIComponent(v); });
+  if (par) {
     var f = document.createElement('iframe');
-    f.src = APP + '?k=' + encodeURIComponent(k);
+    f.src = APP + '?' + par;
     f.title = 'Capacitaciones HyS';
     f.setAttribute('allow', 'clipboard-write');
     document.body.appendChild(f);
